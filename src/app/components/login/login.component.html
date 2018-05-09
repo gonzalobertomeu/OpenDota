@@ -1,0 +1,15 @@
+<mat-card *ngIf="!this._login.logID">
+  <mat-card-title>Seleccione su perfil</mat-card-title>
+  <mat-card-subtitle>
+    <small>302113948 usar este ID como prueba</small>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="formLogin">
+      <mat-form-field>
+        <input type="number" name="id32" [(ngModel)]="login" matInput placeholder="Steam ID" required>
+      </mat-form-field>
+      
+      <button type="submit" mat-fab>Go</button>
+    </form>
+  </mat-card-content>
+</mat-card>

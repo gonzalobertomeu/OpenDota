@@ -1,0 +1,34 @@
+<!-- Card Profile -->
+<mat-card *ngIf="profile"> 
+  <div class="row">
+    <div class="col-8">
+      <mat-card-title>
+        {{profile.nombre}}   <small>| {{profile.locacion}}</small>
+      </mat-card-title>
+      <mat-card-subtitle>
+        Ranking Estimado: <span color="accent">{{profile.mmr_estimado}} mmr</span> <br>
+        Win/Loss <span class="green">{{winloss.win}}</span> - <span class="red">{{winloss.lose}}</span>
+      </mat-card-subtitle>
+    
+    </div>
+    <div class="col-4 text-right">
+      <img mar-card-image [src]="profile.avatarfull" class="avatar">
+    </div>
+  </div>
+  <br>
+</mat-card>
+<!-- Card Recent Games -->
+<mat-expansion-panel>
+  <mat-expansion-panel-header color="primary">
+    <mat-panel-title>Partidas Recientes</mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-list>
+    <div *ngFor="let match of recentMatches">
+      <mat-list-item>
+        {{match.match_id}}
+        {{getHero(match.hero_id)}}
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-list>
+</mat-expansion-panel>

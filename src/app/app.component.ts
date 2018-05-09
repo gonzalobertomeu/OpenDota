@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { LoginService } from './components/login/login.service';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+
+  constructor(public _login: LoginService) {}
+
+  logout() {
+    this._login.logout();
+  }
 }

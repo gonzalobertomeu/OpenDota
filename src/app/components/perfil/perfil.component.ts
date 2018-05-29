@@ -14,9 +14,9 @@ export class PerfilComponent implements OnInit {
   profile: Profile;
   winloss: WinLoss;
   recentMatches: Match[];
-  cachedHeroes: Heroe[];
 
-  constructor(private _api: ApiService, private _login: LoginService, private router: Router) { }
+
+  constructor(public _api: ApiService, private _login: LoginService, private router: Router) { }
 
   ngOnInit() {
     console.log(this._login.logID);
@@ -24,58 +24,44 @@ export class PerfilComponent implements OnInit {
       this.router.navigate(['']);
     } else {
       this.getProfile();
-      this.getWinLoss();
       this.getRecentMatches();
+      this.getWinLoss();
     }
   }
 
   getProfile() {
     this._api.getPlayer(this._login.logID).subscribe(resultado => {
       this.profile = resultado;
+      console.log('Cargado el perfil');
     });
   }
 
   getWinLoss() {
     this._api.getWinLoss(this._login.logID).subscribe(resultado => {
       this.winloss = resultado;
+      console.log('Cargado el WinLoss')
     });
   }
 
   getRecentMatches() {
     this._api.getRecentMatches(this._login.logID).subscribe( resultado => {
-      this.recentMatches = resultado;
-      console.log(this.recentMatches);
+      this.addHeroes(this._api, resultado);
+      console.log('Cargados las partidas recientes');
     });
   }
 
-  // cachearHeroes() {
-  //   this._api.getHeroes().subscribe( resultado => {
-  //     this.cachedHeroes = resultado;
-  //     console.log(this.cachedHeroes);
-  //     console.log(this.cachedHeroes.length);
-  //   });
-  // }
 
-  cachearHeroes() {
-    return new Promise((resolve, reject) => {
-      if (this.cachedHeroes.length > 100) {
-        resolve();
-      } else {
-        this._api.getHeroes().subscribe( resultado => {
-          this.cachedHeroes = resultado;
-          resolve();
+  addHeroes(api: ApiService, partidas: Match[]) {
+    api.getHeroes().subscribe( resultado => {
+      partidas.forEach(function(partida) {
+        partida.hero = resultado.find(function(h) {
+          return h.id === partida.hero_id;
         });
-      }
-    });
-  }
-  getHero(hero: number) {
-    const heroes = this.cachedHeroes;
-    this.cachearHeroes().then(function() {
-      return heroes.find(function(h) {
-        return h.id === hero;
       });
+      this.recentMatches = partidas;
+      console.log('Cargados los heroes');
+
     });
   }
-
 
 }

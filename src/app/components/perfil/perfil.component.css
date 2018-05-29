@@ -18,3 +18,12 @@ mat-expansion-panel{
     width: 50rem;
     padding: 0px;
 }
+.ganador{
+    background: rgba(0, 255, 0, 0.3);
+}
+.perdedor{
+    background: rgba(255, 0, 0, 0.3);
+}
+.row{
+    width: 100%;
+}

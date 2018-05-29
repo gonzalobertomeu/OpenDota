@@ -7,7 +7,7 @@
       </mat-card-title>
       <mat-card-subtitle>
         Ranking Estimado: <span color="accent">{{profile.mmr_estimado}} mmr</span> <br>
-        Win/Loss <span class="green">{{winloss.win}}</span> - <span class="red">{{winloss.lose}}</span>
+        Win/Loss <span *ngIf="winloss" class="green">{{winloss.win}}</span> - <span *ngIf="winloss" class="red">{{winloss.lose}}</span>
       </mat-card-subtitle>
     
     </div>
@@ -23,10 +23,24 @@
     <mat-panel-title>Partidas Recientes</mat-panel-title>
   </mat-expansion-panel-header>
   <mat-list>
+    <mat-list-item>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-3">Heroe</div>
+        <div class="col-3">Resultado</div>
+        <div class="col-4">Id Match</div>
+      </div>
+    </mat-list-item>
     <div *ngFor="let match of recentMatches">
-      <mat-list-item>
-        {{match.match_id}}
-        {{getHero(match.hero_id)}}
+      <mat-list-item [ngClass]="{'ganador': match.win, 'perdedor': !match.win}">
+          <div class="row">
+              <div class="col-2"><img [src]="match.hero.avatar_url" alt=""></div>
+              <div class="col-3">{{match.hero.localized_name}}</div>
+              <div class="col-3"><div *ngIf="match.win; then win else lose"></div></div>
+              <div class="col-4">{{match.match_id}}</div>
+            </div>
+        <ng-template #win>Win</ng-template>
+        <ng-template #lose>Loss</ng-template>
       </mat-list-item>
       <mat-divider></mat-divider>
     </div>

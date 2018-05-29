@@ -16,7 +16,6 @@ export class ApiService {
 
   private baseUrl = 'https://api.opendota.com/api/';
 
-  public cachedHeroes: Heroe[];
 
   constructor(private http: HttpClient, private _login: LoginService) {
     console.log('Se cargo el servicio');
@@ -54,13 +53,21 @@ export class ApiService {
   }
 
   getRecentMatches(player: number): Observable<Match[]> {
-    return this.http.get(this.baseUrl + `players/${player}/recentMatches`).map(resultado => resultado as Match[]);
+    return this.http.get(this.baseUrl + `players/${player}/recentMatches`).map((resultado: Match[]) => {
+      resultado.forEach(match => {
+        match.win = (match.radiant_win && match.player_slot < 100) || (!match.radiant_win && match.player_slot > 100);
+      });
+      return resultado as Match[];
+    });
   }
 
   getHeroes(): Observable<Heroe[]> {
-    return this.http.get(this.baseUrl + 'heroes' ).map( resultado => {
-      this.cachedHeroes = resultado as Heroe[];
-      return this.cachedHeroes;
+    return this.http.get(this.baseUrl + 'heroes' ).map( (resultado: Heroe[]) => {
+      const url = 'https://api.opendota.com/apps/dota2/images/heroes/';
+      resultado.forEach(function(heroe: Heroe) {
+        heroe.avatar_url = url.concat(heroe.name.substr(14).concat('_sb.png'));
+      });
+      return resultado as Heroe[];
     });
   }
 }
@@ -98,11 +105,14 @@ export interface Match {
     cluster: number;
     leaver_status: number;
     party_size: number;
+    hero: Heroe;
+    win: boolean;
 }
 
 export interface Heroe {
   id: number;
   name: String;
+  avatar_url: String;
   localized_name: String;
   primary_attr: String;
   attack_type: String;
